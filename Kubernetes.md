@@ -1,5 +1,7 @@
 # Kubernetes Lecture
 
+Based on [this tutorial](https://www.youtube.com/watch?v=X48VuDVv0do).
+
 ## Basic concepts
 
 ### Main components
@@ -40,3 +42,5 @@ Of course we can build and run two pods by ourselves but that is a tedious task.
 A [**deployment**](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/) is a "blueprint" for cases when pods are stateless (webservers).
 
 When pods are stateful and share the same state (databases) we use [**statefulsets**](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/) which also control who should modify the state now.
+
+Managing statefulsets can be pretty difficult so it is recommended not to keep databases in a K8s cluster but rather somewhere else.
