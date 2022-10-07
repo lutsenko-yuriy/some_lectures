@@ -44,3 +44,33 @@ A [**deployment**](https://kubernetes.io/docs/concepts/workloads/controllers/dep
 When pods are stateful and share the same state (databases) we use [**statefulsets**](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/) which also control who should modify the state now.
 
 Managing statefulsets can be pretty difficult so it is recommended not to keep databases in a K8s cluster but rather somewhere else.
+
+
+## K8s architecture
+
+### Worker nodes
+
+One of main elements is a worker node. Each worker node runs one or several pods.
+
+A worker node has at least 3 processes:
+
+* A container runtime (e.g., docker)
+* A [kubelet](https://kubernetes.io/docs/reference/command-line-tools-reference/kubelet/) which interacts (or can interact) with the runtime and the node itself. It starts a pod with a container inside.
+* A [kube proxy](https://kubernetes.io/docs/reference/command-line-tools-reference/kube-proxy/) which organizes effectively forwarding requests from services to pods.
+
+### Master Nodes
+
+Master Nodes are responsible for organizing a cluster. That includes adding/removing/restarting pods or nodes as well as monitoring.
+
+Unlike worker nodes, master nodes have 4 processes:
+
+* An API server - a cluster's gateway as well as a gatekeeper for authentication.
+* A scheduler - the process responsible for scheduling and assigning a pod to one of worker nodes (usually the least busy) while the kubelet in the worker node starts the pod.
+* A controller manager - the process responsible for monitoring if any pods died. It finds ones and then makes a request to the scheduler so it would restart the pods.
+* [etcd](https://etcd.io/) - a key-value store. Stores all the changes in the cluster. Only stores the cluster-related data. Data of the application running on the cluster is not stored there.
+
+Usually there are also several master nodes for a redundancy.
+
+### [An example cluster](https://www.youtube.com/watch?v=X48VuDVv0do&t=33m8s)
+
+As rule, simple applications start with two master nodes and three worker nodes. For obvious reasons master nodes require less computing power, even though they are crucial for the cluster.
