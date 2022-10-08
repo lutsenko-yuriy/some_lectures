@@ -92,3 +92,50 @@ As rule, simple applications start with two master nodes and three worker nodes.
 Minikube starts a virtual box (virtual machine?) and runs the node on the virtual box.
 
 In order to interact with the Minikube a **Kubectl** is used. It is a command line tool for a K8s cluster. Basically it interacts with the API server running in a master node in any cluster, not only the API server in the Minikube node.
+
+### [Useful commands](https://kubernetes.io/docs/reference/kubectl/)
+
+`kubectl get`:
+
+* `nodes` - show the list of the nodes in the connected cluster
+* `pods` - show the list of the pods in the connected cluster
+* `services` - show the list of the services in the connected cluster
+* `replicaset` - show the [replicasets](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/) - another layer between deployment and a pod, which maintains a stable set of replica pods and guarantees that a certain specific amount of identical pods would be running at the same time.
+
+
+`kubectl create`:
+
+* `deployment` - creates a new deployment
+
+`kubectl edit`:
+
+* `deployment` - opens a text editor where you can edit a deployment. By default it is Vi.
+
+`kubectl delete`:
+
+* `deployment` - deletes the deployment and all the pods built based on this deployment.
+
+
+#### NB
+
+The output of `kubectl get pods` looks like this:
+
+```text
+NAME                                READY   STATUS    RESTARTS   AGE
+nginx-deployment-5fbdf85c67-mb6r5   1/1     Running   0          48s
+```
+
+while the output of `kubectl get replicaset` looks like this:
+
+```text
+NAME                          DESIRED   CURRENT   READY   AGE
+nginx-deployment-5fbdf85c67   1         1         1       95s
+```
+
+Notice that the name of the pod starts with the name of the replicaset.
+
+### Debugging
+
+`kubectl logs <pod name>` - gets logs from the pod
+`kubectl describe pod <pod name>` - shows info on the pod including which states the pod has gone through
+`kubectl exec -it <pod name> -- bin/bash` - shows a terminal inside the pod
