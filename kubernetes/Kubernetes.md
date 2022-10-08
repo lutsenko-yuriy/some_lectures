@@ -172,3 +172,8 @@ By default in a freshly created cluster there are 4 namespaces:
 They can be defined either by `kubectl create namespace <name of a new namespace>` or by writing a `namespace` property in the component's metadata.
 
 Namespaces can be useless in small projects but when the project is getting bigger and a lot of engineers are working on it and a lot of users use it.
+
+Using namespaces has limitation
+
+* You cannot simply work with resources such as ConfigMaps and Secrets from other namespaces. On the other hand you can connect to services from other namespaces but in this case a URL of this service would be [a standard URL + '.' + the other namespace name](https://www.youtube.com/watch?v=X48VuDVv0do&t=6972s).
+* Some components cannot be created within a namespace, only in a global cluster. These are volumes and nodes
