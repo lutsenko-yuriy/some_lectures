@@ -177,3 +177,7 @@ Using namespaces has limitation
 
 * You cannot simply work with resources such as ConfigMaps and Secrets from other namespaces. On the other hand you can connect to services from other namespaces but in this case a URL of this service would be [a standard URL + '.' + the other namespace name](https://www.youtube.com/watch?v=X48VuDVv0do&t=6972s).
 * Some components cannot be created within a namespace, only in a global cluster. These are volumes and nodes
+
+### Kubens
+
+IF we want not to add this `-n <namespace>` all the time we can use [**kubens**](https://github.com/ahmetb/kubectx) to switch between namespaces and all the K8s operations will be performed in the new namespace.
