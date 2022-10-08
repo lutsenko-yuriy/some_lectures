@@ -169,7 +169,7 @@ By default in a freshly created cluster there are 4 namespaces:
 * `kube-node-lease` for information on heartbeats from nodes. Each node has an associated lease object in the namespace which determines the availability of a node.
 * `default` for creating resources unless you specify other namespaces and create resources in them.
 
-They can be defined either by `kubectl create namespace <name of a new namespace>` or by writing a `namespace` property in the component's metadata.
+They can be defined either by `kubectl create namespace <name of a new namespace>` or by writing a `namespace` property in the component's metadata in a YAML configuration file. The latter will also create the component in this namespace while creating a component in a command line would require additional argument `-n <name of the namespace>`.
 
 Namespaces can be useless in small projects but when the project is getting bigger and a lot of engineers are working on it and a lot of users use it.
 
