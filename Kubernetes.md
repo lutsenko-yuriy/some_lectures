@@ -71,6 +71,24 @@ Unlike worker nodes, master nodes have 4 processes:
 
 Usually there are also several master nodes for a redundancy.
 
+#### NB
+
+Starting with version [1.20.0](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.20.md) the name _Master Node_ gets deprecated. Instead another term is used which is [**Control Plane**](https://kubernetes.io/docs/concepts/overview/components/).
+
+The processes from the lecture are called almost the same but `kube-` is added to the beginning of each process (except etcd, it did not change). Also there is a new process called [cloud controller manager](https://kubernetes.io/docs/concepts/overview/components/#cloud-controller-manager) which links the cluster with a used cloud provider's API.
+
+For the rest of the lecture this entity will still be referred to as a Master Node.
+
 ### [An example cluster](https://www.youtube.com/watch?v=X48VuDVv0do&t=33m8s)
 
 As rule, simple applications start with two master nodes and three worker nodes. For obvious reasons master nodes require less computing power, even though they are crucial for the cluster.
+
+## Practice
+
+### Minikube and Kubectl
+
+[**Minikube**](https://github.com/kubernetes/minikube) is a one node cluster running both master and worker processes. It is used to test a cluster locally without deploying it somewhere else. It has a docker preinstalled.
+
+Minikube starts a virtual box (virtual machine?) and runs the node on the virtual box.
+
+In order to interact with the Minikube a **Kubectl** is used. It is a command line tool for a K8s cluster. Basically it interacts with the API server running in a master node in any cluster, not only the API server in the Minikube node.
