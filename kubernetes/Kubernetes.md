@@ -381,3 +381,14 @@ For that reason another entity was created which is [**Service**](https://kubern
 * Has a stable IP address
 * Works as a load balancer for several pods from the same replicaset
 * Provide a loose coupling between pods inside the cluster or with the outer world (but still ingress is recommended for communicating with the outer world).
+
+### Types of services
+
+* ClusterIP (default)
+* Headless services when the direct communication to a specific pod is required (for example, stateful pods from the same statefulset and it is required to contact with a master pod)
+
+Besides that there are 3 service type attributes
+
+* ClusterIP (default)
+* NodePort - makes an external traffic accessible for the node on a specific port. Can have a node port from 30000-32767. Pretty unsafe and inefficient
+* LoadBalancer - same as node port but more secure.
