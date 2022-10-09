@@ -371,3 +371,13 @@ These pods are created in order (pod #(k + 1) will not be created until pod #k i
 Also important that unlike stateless pods which have only the same endpoint provided by a load balancing service each stateful pod has its own endpoint `${pod name}.${governing service domain}`.
 
 **NB**: Although K8s makes a lot to handle stateful pods there is still some challenges for the dev team like the replication issues, backup issues, remote storage issues. The reason is the fitness of the containerized approach in general. It fits really well to stateless applications but not for stateful applications.
+
+## Services
+
+Every pod gets its own IP address after being created. Even when the pod dies and a new one comes into its place the new pod gets another IP address which can make it difficult to communicate between pods.
+
+For that reason another entity was created which is [**Service**](https://kubernetes.io/docs/concepts/services-networking/service/). Every service:
+
+* Has a stable IP address
+* Works as a load balancer for several pods from the same replicaset
+* Provide a loose coupling between pods inside the cluster or with the outer world (but still ingress is recommended for communicating with the outer world).
