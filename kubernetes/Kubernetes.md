@@ -198,3 +198,33 @@ minikube addons enable ingress
 ```
 
 In the video it has created the controller pod `ingress-nginx-controller` in `kube-system` namespace but since `Minikube v1.19` [it will create another namespace](https://kubernetes.io/docs/tasks/access-application-cluster/ingress-minikube/) called `ingress-nginx` and we will find the pod there.
+
+### HTTPS
+
+Another property is getting added into specs which is `tls`:
+
+```yaml
+spec:
+  tls:
+  - hosts:
+    - myapp.com
+    secretName: myapp-secret-tls
+# ...
+```
+
+where `myapp-secret-tls` is a secret with data we define like this
+
+```yaml
+data:
+  tls.crt: <base64 encoded cert>
+  tls.ket: <base64 encoded key>
+type: kubernetes.io/tls
+```
+
+## [Helm package manager](https://helm.sh/)
+
+Helm is a package manager for Kubernetes like docker hub where you can find some already created YAMLs instead of writing your own YAMLs.
+
+These YAMLs are organized into so called Helm Charts. These are useful when, for example, you want to build some [ELK Stack](https://www.elastic.co/what-is/elk-stack) with all the secrets and config maps.
+
+Also Helm can work as a templating engine so we can define a common blueprint and in this blueprint we can replace some values with other ones coming from `values.yaml`
