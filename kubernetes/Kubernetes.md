@@ -227,4 +227,38 @@ Helm is a package manager for Kubernetes like docker hub where you can find some
 
 These YAMLs are organized into so called Helm Charts. These are useful when, for example, you want to build some [ELK Stack](https://www.elastic.co/what-is/elk-stack) with all the secrets and config maps.
 
-Also Helm can work as a templating engine so we can define a common blueprint and in this blueprint we can replace some values with other ones coming from `values.yaml`
+Also Helm can work as a templating engine so we can define a common blueprint and in this blueprint we can replace some values with other ones coming from `values.yaml`.
+
+### Helm chart structure
+
+* Name of chart which is also a top level folder
+* `Chart.yaml` - metadata on chart
+* `values.yaml` - default values for charts
+* `charts` - chart dependencies folder
+* `templates` - the folder with actual templates
+
+Besides that there can be some README or LICENCE files.
+
+We deploy those YAML files with `helm install <chartname>`.
+
+The `values.yaml` can be overriden. For example, when default `values.yaml` look like this
+
+```yaml
+imageName: myapp
+port: 8080
+version: 1.0.0
+```
+
+we can redefine some of values in `my-values.yaml` which looks like this
+
+```yaml
+version: 2.0.0
+```
+
+After that with a command `helm install --values=my-values.yaml <chartname>` we will deploy all the templates with values like this:
+
+```yaml
+imageName: myapp
+port: 8080
+version: 2.0.0
+```.
