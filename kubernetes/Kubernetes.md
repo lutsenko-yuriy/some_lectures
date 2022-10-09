@@ -181,3 +181,20 @@ Using namespaces has limitation
 ### Kubens
 
 IF we want not to add this `-n <namespace>` all the time we can use [**kubens**](https://github.com/ahmetb/kubectx) to switch between namespaces and all the K8s operations will be performed in the new namespace.
+
+## Ingress
+
+We can connect to a K8s cluster by connecting to a one of the external services with their IPs and ports. This is enough when we test a cluster but we need a human-readable format when we run the cluster on prod. For this purposes [**Ingress**](https://kubernetes.io/docs/concepts/services-networking/ingress/) was created.
+
+Ingress also allows us to refer to internal services instead of external ones. One of its specification properties is (routing) rules according to which redirecting requests happens.
+
+In order to implement an Ingress we need to run another node or several nodes called [**Ingress controllers**](https://kubernetes.io/docs/concepts/services-networking/ingress-controllers/) which evaluate and process Ingress rules. The ingress will be an entry point to the cluster. There are a lot of different implementations of ingress controllers. By default the K8s cluster provides K8s Nginx Ingress Controller.
+
+### Implementation order
+
+First we should start the controller. If we want the one provided by default in Minikube we type
+```
+minikube addons enable ingress
+```
+
+In the video it has created the controller pod `ingress-nginx-controller` in `kube-system` namespace but since `Minikube v1.19` [it will create another namespace](https://kubernetes.io/docs/tasks/access-application-cluster/ingress-minikube/) called `ingress-nginx` and we will find the pod there.
