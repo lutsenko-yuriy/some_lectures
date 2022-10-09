@@ -6,7 +6,7 @@ Based on [this tutorial](https://www.youtube.com/watch?v=X48VuDVv0do).
 
 ### Main components
 
-A K8s consists of [**nodes**](https://kubernetes.io/docs/concepts/architecture/nodes/) - simple server, either physical or virtual machines. 
+A K8s consists of [**nodes**](https://kubernetes.io/docs/concepts/architecture/nodes/) - simple server, either physical or virtual machines.
 
 Inside these nodes are smallest deployable units called [**pods**](https://kubernetes.io/docs/concepts/workloads/pods/) - some abstract containers (like Docker containers but more abstract in order not to get coupled to Docker). Each pod has its own IP address.
 
@@ -261,4 +261,52 @@ After that with a command `helm install --values=my-values.yaml <chartname>` we 
 imageName: myapp
 port: 8080
 version: 2.0.0
-```.
+```
+
+## Volumes
+
+As already mentioned when a pod gets restarted everything on the previous pod is not restored unless we dedicate a separate [**Volume**](https://kubernetes.io/docs/concepts/storage/volumes/) - an abstraction attaching a physical storage in the node or outside of the node.
+
+After a pod being killed volumes allow to persist the data for this pod. Since it is impossible to predict on which exact node a new pod will be created instead of the old one volumes are bound to a cluster but not to a single namespace or a node.
+
+Among the requirements to the volumes should be:
+
+1) Independency from the pod's lifecycle
+2) Availability on all nodes
+3) Being able to survive even the cluster crashes
+
+**NB**: several volumes (not necessary of the same type) can be assigned to a single pod.
+
+### Persistent volumes
+
+[**Persistent volumes (or PVs)**](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) can be treated as some sort of cluster resource (like RAM, CPU). In general it is an interface to a real storage, be it a local hard drive or some cloud storage like Amazon EBS.
+
+Nevertheless if we are talking about local volume types they do not meet some of the requirements:
+
+1) They are coupled to a single node
+2) They die with the whole cluster crashed.
+
+So it is recommended to use a remote storage.
+
+It is obvious that persistent volumes should be created before a pod depending on it is created. Be it a local storage or remote storage, it is a responsibility of a K8s administrator to provide a required volume.
+
+### Persistence volume claim
+
+While PVs are created by a K8s administrator a K8s user can crated the so-called **persistent volume claim (or PVC)** which contains the info on a required storage (is it AWS? what is the required space in GiBs?) so the user can know that there is a storage meeting his requirements.
+
+So the work of a PVC looks like this:
+
+1) A pod requests a volume with a PVC
+2) The PVC tries to find a PV meeting the requirements of the PVC in the cluster
+3) The volume has now the actual storage and gets mounted to the pod
+
+Unlike volumes, PVCs are coupled to namespaces and the PVC should be in the same namespace as the pod.
+
+### Volumes' special cases
+
+ConfigMaps and Secrets can also be looked at as special cases of volumes. They are local volumes, created neither via PV nor via PVC and managed by K8s.
+
+### ADDITIONAL: Main roles in the K8s cluster
+
+* Administrators - the ones setting up and maintaining a cluster, including making sure the cluster has enough resources. Sysadmins and DevOps engineers are the one in this role.
+* Users - deploy applications into the cluster either manually or automatically with CI/CD servers' help. These are DevOps teams in development teams.
