@@ -67,9 +67,7 @@ Unlike worker nodes, master nodes have 4 processes:
 
 Usually there are also several master nodes for a redundancy.
 
-#### NB
-
-Starting with version [1.20.0](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.20.md) the name _Master Node_ gets deprecated. Instead another term is used which is [**Control Plane**](https://kubernetes.io/docs/concepts/overview/components/).
+**NB**: Starting with version [1.20.0](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.20.md) the name _Master Node_ gets deprecated. Instead another term is used which is [**Control Plane**](https://kubernetes.io/docs/concepts/overview/components/).
 
 The processes from the lecture are called almost the same but `kube-` is added to the beginning of each process (except etcd, it did not change). Also there is a new process called [cloud controller manager](https://kubernetes.io/docs/concepts/overview/components/#cloud-controller-manager) which links the cluster with a used cloud provider's API.
 
@@ -112,9 +110,7 @@ In order to interact with the Minikube a **Kubectl** is used. It is a command li
 
 `kubectl apply -f <file>` - applies the content of the file (YAML format) to the cluster
 
-#### NB
-
-The output of `kubectl get pods` looks like this:
+**NB**: The output of `kubectl get pods` looks like this:
 
 ```text
 NAME                                READY   STATUS    RESTARTS   AGE
@@ -325,3 +321,53 @@ Now when an SC is introduced the process of getting a new volume looks like this
 
 * Administrators - the ones setting up and maintaining a cluster, including making sure the cluster has enough resources. Sysadmins and DevOps engineers are the one in this role.
 * Users - deploy applications into the cluster either manually or automatically with CI/CD servers' help. These are DevOps teams in development teams.
+
+## StatefulSets
+
+A [**StatefulSet**](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/) is a special K8s component that runs a stateful app.
+
+### Differences between StatefulSets and Deployments
+
+Pods created by the same deployment
+
+* Are identical and interchangable
+* Can be created in random order with random hashes
+* Can have a single service load balancing
+
+Pods created by the same statefulset
+
+* Cannot be created or deleted at the same time
+* Cannot be randomly addressed
+* Are not identical
+* Have a sticky identity able to survive a recreation
+* Are not interchangable
+
+### Scaling DB applications
+
+While read operations are idempotent and therefore can go in parallel write operations modify the state and potentially cause data inconsistency.
+
+For that reason the mechanism was introduced with a master node which can both read from and write into the state and worker nodes with read-only replicas of the state. Besides that the replication mechanism is implemented to continuously synchronize the states.
+
+### Pod state
+
+Stateful pods have their own state where they store if they are masters or workers. When a pod dies it gets replaced by a new pod with the same ID. For that reason it is recommended to store states and data on remote volumes.
+
+### Pod identity
+
+As already mentioned stateless pods have the following name structure:
+
+```bash
+$(deployment name)-$(replicaset hash)-$(pod hash)
+```
+
+The stateful set pods look like this
+
+```bash
+$(statefulset name)-$(ordinal)
+```
+
+These pods are created in order (pod #(k + 1) will not be created until pod #k is created) and deleted in reverse order (pod #(k - 1) will not be deleted until pod #k is deleted).
+
+Also important that unlike stateless pods which have only the same endpoint provided by a load balancing service each stateful pod has its own endpoint `${pod name}.${governing service domain}`.
+
+**NB**: Although K8s makes a lot to handle stateful pods there is still some challenges for the dev team like the replication issues, backup issues, remote storage issues. The reason is the fitness of the containerized approach in general. It fits really well to stateless applications but not for stateful applications.
