@@ -306,6 +306,21 @@ Unlike volumes, PVCs are coupled to namespaces and the PVC should be in the same
 
 ConfigMaps and Secrets can also be looked at as special cases of volumes. They are local volumes, created neither via PV nor via PVC and managed by K8s.
 
+### Storage classes
+
+All the PVC are satisfied manually by default. When the project grows this process can get expensive and time-consuming.
+
+For that reason [**Storage classes (or SCs)**](https://kubernetes.io/docs/concepts/storage/storage-classes/) were introduced.
+
+SCs provide PVs dynamically in a background when a PVC claims one.
+
+Now when an SC is introduced the process of getting a new volume looks like this:
+
+1) A pod requests a volume with a PVC
+2) The PVC requests storage from the SC
+3) The SC creates a new PV meeting the requirements of the PVC in the cluster
+4) The volume has now the actual storage and gets mounted to the pod
+
 ### ADDITIONAL: Main roles in the K8s cluster
 
 * Administrators - the ones setting up and maintaining a cluster, including making sure the cluster has enough resources. Sysadmins and DevOps engineers are the one in this role.
