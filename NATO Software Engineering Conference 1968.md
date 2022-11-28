@@ -1,4 +1,4 @@
-<html>
+<html><head></head>
 
 <body data-feedly-mini="yes">
 
